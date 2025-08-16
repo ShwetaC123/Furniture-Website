@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Design Dome Furniture</h1>
+        <nav>
+            <a href="F1.html">Home</a> |
+            <a href="cart.html">View Cart</a> |
+            <span>🛒 Cart Items: <span id="cart-count">0</span></span>
+        </nav>
+
+    </header>
+
+    <div id="product-detail"></div>
+
+    <button onclick="window.history.back()">Go Back</button>
+
+    <script>
+        const products = [
+            { id: 1, name: "Wooden Chair", price: 1500, image: "chair.jpg", description: "Comfortable wooden chair made of high-quality wood." },
+            { id: 2, name: "Luxury Sofa", price: 12000, image: "sofa.jpg", description: "Elegant and luxury sofa with premium fabric." },
+            { id: 3, name: "Dining Table", price: 8000, image: "table.jpg", description: "Spacious dining table suitable for families." },
+            { id: 4, name: "Loop Table", price: 7800, image: "loop.jpg" , description: "Minimalist piece relies on structural balance and seamless curvature, offering a sculptural workspace where form and function flow as one."},
+            { id: 5, name: "Shelf Table", price: 5000, image: "shelf.jpg" , description:"Black brown side table is crafted from high-quality, ethically sourced engineered wood with a durable laminate finish and chip-free edges." },
+            { id: 6, name: "Cabinet", price: 15000, image: "cabinet.jpg" , description: "Wooden TV cabinets provide a sturdy and stable base for your television and other electronic devices."}
+        ];
+
+       
+        const params = new URLSearchParams(window.location.search);
+        const productId = parseInt(params.get('id'));
+
+        const detailDiv = document.getElementById('product-detail');
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        const product = products.find(p => p.id === productId);
+
+        if (product) {
+            detailDiv.innerHTML = `
+        <h1>${product.name}</h1>
+        <img src="Images/${product.image}" alt="${product.name}" width="200"><br>
+        <p>Price: ₹${product.price}</p>
+        <p>Description: ${product.description}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+        <br><br>
+        <a href="F1.html">Go to Home</a> | <a href="#" onclick="window.history.back()">Go Back</a>
+    `;
+        } else {
+            detailDiv.innerHTML = '<p>Product not found.</p>';
+        }
+
+        function addToCart(productId) {
+            const prod = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+
+            if (cartItem) {
+                cartItem.quantity += 1;
+            } else {
+                cart.push({ ...prod, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(prod.name + " added to cart!");
+        }
+    </script>
+
+</body>
+
+</html>
